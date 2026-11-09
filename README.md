@@ -1,4 +1,4 @@
-# hyperbole_graphing_calculator
+# Hyperbole Graphing Calculator
 A vertical hyperbole visualizer built in openGL
 
 ![ilustration](hyperbole.png)
