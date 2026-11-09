@@ -8,7 +8,7 @@ This project requires:
 - `GLFW 3.x.x`
 
 # Compile and Run
-Go to the src directory and run:
+Go into the `src` directory and run:
 
 ```fish
 cmake -B build
