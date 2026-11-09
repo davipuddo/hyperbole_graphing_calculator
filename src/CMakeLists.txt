@@ -16,4 +16,8 @@ target_include_directories(hgc PRIVATE
     lib/
 )
 
+target_compile_options(hgc PRIVATE
+    -O3
+)
+
 target_link_libraries(hgc PRIVATE glfw)
