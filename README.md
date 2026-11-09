@@ -1,6 +1,8 @@
 # hyperbole_graphing_calculator
 A vertical hyperbole visualizer built in openGL
 
+![ilustration](hyperbole.png)
+
 # Requirements
 This project requires:
 - `cmake 4.4.4` or higher
