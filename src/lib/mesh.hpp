@@ -15,6 +15,10 @@ inline std::vector<float> hyperbole_mesh() {
 
     std::vector<float> points;
 
+    if (A == 0 || B == 0) {
+        return points;
+    }
+
     float R = Zoom;
 
     float step = point_step * Zoom * 0.01;
