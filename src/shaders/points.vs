@@ -4,10 +4,12 @@ layout (location = 0) in vec3 aPos;
 
 out vec3 VertexColor;
 
-uniform float zoom;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
 
 void main()
 {
-    gl_Position = vec4(aPos, zoom);
-    VertexColor = vec3(0.5, 0, 1.0);
+    gl_Position = proj * view * model * vec4(aPos, 1.0f);
+    VertexColor = vec3(0.3, 0.8, 1.0);
 }

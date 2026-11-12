@@ -6,6 +6,8 @@
 #include <iostream>
 #include <vector>
 
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 #include <glad/gl.h> // include glad to get all the required OpenGL headers
 #include <sys/types.h>
   
@@ -53,6 +55,15 @@ class Shader {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
 
+    void setVec3(const std::string &name, glm::vec3 value) const {
+        glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    }
+
+    void setMat4(const std::string &name, glm::mat4 value) const {
+        int location = glGetUniformLocation(ID, name.c_str());
+        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+    }
+
     private:
 
     void createProgram (uint vertex, uint fragment) {
@@ -63,7 +74,7 @@ class Shader {
 
         glLinkProgram(ID);
 
-        checkError(ID, "PROGRAM");
+        checkError(ID, NULL, "PROGRAM");
     }
 
     std::vector<uint> compShaders (const char* vertexSource, const char* fragmentSource) {
@@ -72,14 +83,14 @@ class Shader {
         glShaderSource(vertexShader, 1, &vertexSource, NULL);
         glCompileShader(vertexShader);
 
-        checkError(vertexShader, "VERTEX");
+        checkError(vertexShader, vertexSource, "VERTEX");
 
         uint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
         glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
         glCompileShader(fragmentShader);
 
-        checkError(fragmentShader, "FRAGMENT");
+        checkError(fragmentShader, fragmentSource, "FRAGMENT");
 
         std::vector<uint> res = { vertexShader, fragmentShader };
 
@@ -121,7 +132,7 @@ class Shader {
         return res;
     }
 
-    void checkError(uint id, std::string type) {
+    void checkError(uint id, const char* source, std::string type) {
 
         int success;
         char infoLog[512];
@@ -132,7 +143,10 @@ class Shader {
             if (!success)
             {
                 glGetShaderInfoLog(id, 512, NULL, infoLog);
-                std::cerr << "ERROR::SHADER::TYPE::" << type << "\n" << infoLog << std::endl;
+                std::cerr << "ERROR::SHADER::TYPE::" << type << "\n" << infoLog << "\n";
+                if (source) {
+                    std::cerr << "source: \"" << source << "\"" << std::endl;
+                }
             }
         }
         else {
@@ -140,7 +154,10 @@ class Shader {
             if(!success)
             {
                 glGetProgramInfoLog(id, 512, NULL, infoLog);
-                std::cerr << "ERROR::PROGRAM_LINK::TYPE::" << type << "\n" << infoLog << std::endl;
+                std::cerr << "ERROR::PROGRAM_LINK::TYPE::" << type << "\n" << infoLog << "\n";
+                if (source) {
+                    std::cerr << "source: \"" << source << "\"" << std::endl;
+                }
             }
         }
     }

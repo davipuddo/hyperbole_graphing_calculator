@@ -15,9 +15,16 @@ inline std::vector<float> hyperbole_mesh() {
 
     std::vector<float> points;
 
-    float R = Zoom;
+    if ((A > -0.001f && A < 0.001f) 
+    || (B > -0.001f && B < 0.001f))
+    {
+        return points;
+    }
 
-    float step = point_step * Zoom * 0.01;
+    float density = 10000.0f;
+    float R = (SCR_HEIGHT * SCR_WIDTH) / density;
+
+    float step = point_step * R * 0.01;
 
     int total = (int)((2.0f * R) / step);
 
@@ -25,7 +32,7 @@ inline std::vector<float> hyperbole_mesh() {
 
         float x = (i * step) - R;
 
-        // sqrt(b^2 * ((x - dx)^2 / a^2 + 1)) = y + dy
+        // sqrt(b^2 * ((x - dx)^2 / a^2 + 1)) = y - dy
 
         float tmpx = x - DX;
 
