@@ -4,9 +4,7 @@ A vertical hyperbole visualizer built in openGL
 ![ilustration](hyperbole.png)
 
 # Minimum Requirements
-This project requires:
-- `openGL 4.4 core` support
-- `GLSL 4.4 core` support
+- support for `openGL 4.4 core` and `GLSL 4.4 core`
 - A C++20 compiler like `gcc 10` or `clang 10`
 - `cmake 4.4.4`
 - `make 4.4.x`
