@@ -125,8 +125,7 @@ int main()
         float prevB = B;
         float prevDX = DX;
         float prevDY = DY;
-
-        processInput(window);
+        float prevSide = cameraSide;
 
         // Create current view matrix
         mat4 view = lookAt(cameraPos, cameraPos + cameraFront, worldUp);
@@ -184,11 +183,12 @@ int main()
             }
         }
 
+        // Display buffer + execute events
         glfwSwapBuffers(window);
         glfwPollEvents();
 
         // Update points & print, on new inputs
-        if (prevA != A || prevB != B || prevDX != DX || prevDY != DY)
+        if (prevA != A || prevB != B || prevDX != DX || prevDY != DY || prevSide != cameraSide)
         {
             points = hyperbole_mesh();
             print_state();

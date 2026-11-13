@@ -43,13 +43,9 @@ float round(float x) {
     return (float)((double)std::round(x * pow10) / pow10);
 }
 
-void processInput(GLFWwindow *window)
-{
-}
-
 void scroll_wheel_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    float dy = (float)yoffset;
-    cameraSide += -dy * 0.5f;
+    float dy = -(float)yoffset * 0.5;
+    cameraSide = std::max(cameraSide + dy, 0.3f);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {

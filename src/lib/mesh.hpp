@@ -21,8 +21,8 @@ inline std::vector<float> hyperbole_mesh() {
         return points;
     }
 
-    float density = 10000.0f;
-    float R = (SCR_HEIGHT * SCR_WIDTH) / density;
+    float density = 20000.0f;
+    float R = (SCR_HEIGHT * SCR_WIDTH * cameraSide) / density;
 
     float step = point_step * R * 0.01;
 
