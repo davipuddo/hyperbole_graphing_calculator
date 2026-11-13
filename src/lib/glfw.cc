@@ -1,3 +1,4 @@
+#include <glm/ext/quaternion_geometric.hpp>
 #include <iostream>
 #include <cmath>
 #include <glad/gl.h>
@@ -5,8 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-const uint SCR_WIDTH = 800;
-const uint SCR_HEIGHT = 800;
+const uint SCR_WIDTH = 1400;
+const uint SCR_HEIGHT = 1400;
 
 const uint FLOAT_PRECISION = 3;
 
@@ -20,9 +21,22 @@ float DY = 0.0f;
 
 static float Zoom = 5.0f;
 
+bool first_mouse = false;
+
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+
+bool MOUSE_DRAG = false;
+
 glm::vec3 cameraPos(0.0, 0.0, 3.0);
 glm::vec3 cameraFront(0.0, 0.0, -1.0);
 glm::vec3 worldUp(0.0, 1.0, 0.0);
+
+float cameraSide = 10.0f;
+
+glm::vec3 front = cameraFront;
+glm::vec3 side = glm::normalize(glm::cross(front, worldUp));
+glm::vec3 up = glm::normalize(glm::cross(side, front));
 
 float round(float x) {
     double pow10 = std::pow(10, FLOAT_PRECISION);
@@ -34,10 +48,41 @@ void processInput(GLFWwindow *window)
 }
 
 void scroll_wheel_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    float dy = (float)yoffset * 0.5;
-    float dx = -(float)xoffset * 0.5;
+    float dy = (float)yoffset;
+    cameraSide += -dy * 0.5f;
+}
 
-    cameraFront += glm::vec3(dx, dy, 0.0f);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+
+    if (first_mouse) {
+        lastX = xpos;
+        lastY = ypos;
+        first_mouse = false;
+    }
+
+    float dx = xpos - lastX;
+    float dy = lastY - ypos;
+
+    lastX = xpos;
+    lastY = ypos;
+
+    if (MOUSE_DRAG) {
+        float mult = 0.001 * cameraSide;
+        cameraPos += side * -dx * mult;
+        cameraPos += up * -dy * mult;
+    }
+}
+
+void mouse_button(GLFWwindow* window, int button, int action, int mods) {
+
+    if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        if (action == GLFW_PRESS) {
+            MOUSE_DRAG = true;
+        }
+        if (action == GLFW_RELEASE) {
+            MOUSE_DRAG = false;
+        }
+    }
 }
 
 void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -123,6 +168,8 @@ GLFWwindow* GLFWStart() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetScrollCallback(window, scroll_wheel_callback);
     glfwSetKeyCallback(window, keyboard_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetMouseButtonCallback(window, mouse_button);
 
     // Start glad
     if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress))

@@ -9,6 +9,8 @@ using namespace std;
 
 void print_state() {
 
+    return;
+
     system("clear");
 
     cout << "Controles - \n\n";
@@ -108,17 +110,8 @@ int main()
     DY = 0.0f; 
 
     // Define frustum
-    float fside = 10.0f;
     float near = 0.1f;
     float far = 100.0f;
-
-    mat4 proj = perspective(
-            radians(65.0f),
-            (float)SCR_WIDTH / (float)SCR_HEIGHT,
-            near,
-            far);
-
-    proj = ortho(-fside, fside, -fside, fside, near, far);
 
     // Create hyperbole's mesh
     vector<float> points = hyperbole_mesh();
@@ -132,7 +125,7 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Temporary values to avoid calculations
         float prevA = A;
@@ -141,6 +134,10 @@ int main()
         float prevDY = DY;
 
         processInput(window);
+
+                     //left   right  bottom  top    --    --
+        mat4 proj = ortho(-cameraSide, cameraSide, -cameraSide, cameraSide, near, far);
+
 
         // Create current view matrix
         mat4 view = lookAt(cameraPos, cameraPos + cameraFront, worldUp);
