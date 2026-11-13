@@ -9,8 +9,6 @@ using namespace std;
 
 void print_state() {
 
-    return;
-
     system("clear");
 
     cout << "Controles - \n\n";
@@ -102,12 +100,7 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    //read_initial_state();
-
-    A = 1.0f;
-    B = 1.0f;
-    DX = 0.0f; 
-    DY = 0.0f; 
+    read_initial_state();
 
     // Define frustum
     float near = 0.1f;
@@ -135,16 +128,15 @@ int main()
 
         processInput(window);
 
-                     //left   right  bottom  top    --    --
-        mat4 proj = ortho(-cameraSide, cameraSide, -cameraSide, cameraSide, near, far);
-
-
         // Create current view matrix
         mat4 view = lookAt(cameraPos, cameraPos + cameraFront, worldUp);
 
         // Make grid strech into the window's borders
         mat4 model = mat4(1.0);
         model = scale(model, vec3((float)SCR_HEIGHT));
+
+        // Create projection matrix | left  right  bottom  top  --  --
+        mat4 proj = ortho(-cameraSide, cameraSide, -cameraSide, cameraSide, near, far);
 
         // Attach shader
         grid_shader.use();
